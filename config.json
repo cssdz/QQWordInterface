@@ -1,0 +1,27 @@
+{
+  "app":{
+    "name":  "QQWordInterface",
+    "version": "1.0.1",
+    "mode": "dev",
+    "port": 9180
+  },
+  "log": {
+    "level": "debug",
+    "filename": "./log/interface.log",
+    "maxsize": 100,
+    "max_backup": 0,
+    "max_age": 0
+  },
+  "mysql": {
+    "host": "localhost",
+    "port": "3306",
+    "user": "root",
+    "password": "zixingche",
+    "db": "word"
+  },
+  "redis": {
+    "host": "127.0.0.1",
+    "port": 6379,
+    "db": 0
+  }
+}
