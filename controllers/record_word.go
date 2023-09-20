@@ -76,7 +76,7 @@ func RecordWord(c *gin.Context) {
 			return
 		}
 
-		err = mysql.UpdateUser(jsRecordWord.ID, no, 0, 0)
+		err = mysql.UpdateUser(jsRecordWord.ID, no, 0, 1)
 		if err != nil {
 			c.JSON(http.StatusOK, gin.H{
 				"status": -1,

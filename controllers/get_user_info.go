@@ -66,7 +66,7 @@ func GetUserInfo(c *gin.Context) {
 	userInfo.MaxAchievement = fmt.Sprintf("最多连续学习%s天", userInfo.MaxAchievement)
 	userInfo.LatestAchievement = fmt.Sprintf("最近连续学习%s天", userInfo.LatestAchievement)
 
-	//zap.L().Info("注册/设置成功", zap.String("id", jsRegister.ID))
+	zap.L().Info("注册/设置成功", zap.String("id", jsUserInfoRequest.ID))
 	c.JSON(http.StatusOK, gin.H{
 		"status": 1,
 		"msg":    "注册/设置成功",
