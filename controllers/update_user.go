@@ -57,8 +57,17 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	// status必须为0或1
-	if jsUpdateUser.Status != 0 && jsUpdateUser.Status != 1 {
-		zap.L().Error("单词状态必须为0或1", zap.String("id", jsUpdateUser.ID), zap.Int("status", jsUpdateUser.Status))
+	status, err := strconv.Atoi(jsUpdateUser.Status)
+	if err != nil {
+		zap.L().Error("变量格式转换错误", zap.String("id", jsUpdateUser.ID), zap.Int("status", status))
+		c.JSON(http.StatusOK, gin.H{
+			"status": -1,
+			"msg":    "变量格式转换错误",
+		})
+		return
+	}
+	if status != 0 && status != 1 {
+		zap.L().Error("单词状态必须为0或1", zap.String("id", jsUpdateUser.ID), zap.Int("status", status))
 		c.JSON(http.StatusOK, gin.H{
 			"status": -1,
 			"msg":    "单词状态必须为0或1",
@@ -71,7 +80,7 @@ func UpdateUser(c *gin.Context) {
 	if err != nil { // 如果记录不存在且单词状态为0，则插入一条新记录
 		turn := 0
 		zap.L().Info("记录不存在", zap.String("id", jsUpdateUser.ID), zap.String("no", jsUpdateUser.No))
-		if jsUpdateUser.Status == 0 {
+		if status == 0 {
 			err = mysql.InsertUserRecord(jsUpdateUser.ID, jsUpdateUser.No)
 			if err != nil {
 				c.JSON(http.StatusOK, gin.H{
@@ -82,7 +91,7 @@ func UpdateUser(c *gin.Context) {
 			}
 		}
 		// 更新用户数据
-		err = mysql.UpdateUser(jsUpdateUser.ID, jsUpdateUser.Status, turn)
+		err = mysql.UpdateUser(jsUpdateUser.ID, jsUpdateUser.No, status, turn)
 		if err != nil {
 			c.JSON(http.StatusOK, gin.H{
 				"status": -1,
@@ -93,7 +102,7 @@ func UpdateUser(c *gin.Context) {
 	} else {
 		turn := 1
 		zap.L().Info("记录存在", zap.String("id", jsUpdateUser.ID), zap.String("no", jsUpdateUser.No))
-		if jsUpdateUser.Status == 0 {
+		if status == 0 {
 			err = mysql.UpdateUserRecord(jsUpdateUser.ID, jsUpdateUser.No)
 			if err != nil {
 				c.JSON(http.StatusOK, gin.H{
@@ -104,7 +113,7 @@ func UpdateUser(c *gin.Context) {
 			}
 		}
 		// 更新用户数据
-		err = mysql.UpdateUser(jsUpdateUser.ID, jsUpdateUser.Status, turn)
+		err = mysql.UpdateUser(jsUpdateUser.ID, jsUpdateUser.Status, status, turn)
 		if err != nil {
 			c.JSON(http.StatusOK, gin.H{
 				"status": -1,

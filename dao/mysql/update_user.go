@@ -40,14 +40,19 @@ func UpdateUserRecord(id string, no string) error {
 }
 
 // UpdateUser 更新用户信息
-func UpdateUser(id string, status int, turn int) error {
+func UpdateUser(id string, no string, status int, turn int) error {
 	var SqlStr string
 	if turn == 0 {
 		switch status {
 		case 0:
-			SqlStr = "UPDATE `word`.`user_info` SET `word_times` = `word_times`+1, `next_word_no` = `next_word_no`+1, `record_word_num`= `record_word_num`+1, `update_time` = CURRENT_TIME WHERE `id` = ?"
+			SqlStr = "UPDATE `word`.`user_info` SET `word_times` = `word_times`+1, `next_word_no` = ?+1, `record_word_num`= `record_word_num`+1, `update_time` = CURRENT_TIME WHERE `id` = ?"
 		case 1:
-			SqlStr = "UPDATE `word`.`user_info` SET `word_times` = `word_times`+1, `next_word_no` = `next_word_no`+1, `update_time` = CURRENT_TIME WHERE `id` = ?"
+			SqlStr = "UPDATE `word`.`user_info` SET `word_times` = `word_times`+1, `next_word_no` = ?+1, `update_time` = CURRENT_TIME WHERE `id` = ?"
+		}
+		_, err := db.Exec(SqlStr, no, id)
+		if err != nil {
+			zap.L().Error("UpdateUserRecord1 exec err", zap.Error(err), zap.String("id", id))
+			return errors.New("用户记录更新失败")
 		}
 	} else {
 		switch status {
@@ -56,11 +61,11 @@ func UpdateUser(id string, status int, turn int) error {
 		case 1:
 			SqlStr = "UPDATE `word`.`user_info` SET `word_times` = `word_times`+1, `update_time` = CURRENT_TIME WHERE `id` = ?"
 		}
-	}
-	_, err := db.Exec(SqlStr, id)
-	if err != nil {
-		zap.L().Error("UpdateUserRecord exec err", zap.Error(err), zap.String("id", id))
-		return errors.New("用户记录更新失败")
+		_, err := db.Exec(SqlStr, id)
+		if err != nil {
+			zap.L().Error("UpdateUserRecord2 exec err", zap.Error(err), zap.String("id", id))
+			return errors.New("用户记录更新失败")
+		}
 	}
 	return nil
 }

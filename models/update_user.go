@@ -4,7 +4,7 @@ package models
 type UpdateUserRequest struct {
 	ID     string `json:"id"`
 	No     string `json:"no"`
-	Status int    `json:"status,string"`
+	Status string `json:"status"`
 }
 
 // Achievement 获取连续天数
