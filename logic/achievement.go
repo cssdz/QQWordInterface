@@ -27,6 +27,7 @@ func UpdateAchievement(id string) {
 			achievement.Max = achievement.Latest
 		}
 		// 将其更新至数据库
+		zap.L().Info("更新连续天数", zap.Int("max_achievement", achievement.Max), zap.Int("latest_achievement", achievement.Latest))
 		mysql.UpdateAchievement(id, achievement.Max, achievement.Latest)
 	} else {
 		zap.L().Info("连续天数无需更新", zap.String("id", id))
