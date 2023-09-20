@@ -102,9 +102,9 @@ func GetAchievement(id string) (models.Achievement, error) {
 }
 
 // UpdateAchievement 更新连续天数
-func UpdateAchievement(id string, maxAchievement int, latestAchievement int) {
+func UpdateAchievement(id string, achievement models.Achievement) {
 	sqlStr := "UPDATE `word`.`user_info` SET `max_achievement` = ?, `latest_achievement` = ? WHERE `id` = ?"
-	_, err := db.Exec(sqlStr, id, maxAchievement, latestAchievement)
+	_, err := db.Exec(sqlStr, achievement.Max, achievement.Latest, id)
 	if err != nil {
 		zap.L().Error("UpdateAchievement exec err", zap.Error(err), zap.String("id", id))
 		return
