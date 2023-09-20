@@ -16,7 +16,6 @@ func UpdateAchievement(id string) {
 	s1 := t1.Format("2006-01-02 15:04:05")
 	daySQL, _ := strconv.Atoi(s1[8:10])
 	day := time.Now().Day()
-	zap.L().Info("test", zap.Int("daysSQL", daySQL), zap.Int("day", day), zap.Int("result", day-daySQL))
 	if day-daySQL >= 1 {
 		// 如果今天第一次使用，则更新连续天数
 		// 获取连续天数
@@ -30,7 +29,7 @@ func UpdateAchievement(id string) {
 		zap.L().Info("更新连续天数", zap.Int("max_achievement", achievement.Max), zap.Int("latest_achievement", achievement.Latest))
 		mysql.UpdateAchievement(id, achievement)
 	} else {
-		zap.L().Info("连续天数无需更新", zap.String("id", id))
+		zap.L().Info("连续天数无需更新", zap.Int("daysSQL", daySQL), zap.Int("day", day), zap.Int("result", day-daySQL))
 	}
 }
 
